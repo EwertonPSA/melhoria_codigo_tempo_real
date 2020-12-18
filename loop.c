@@ -36,9 +36,9 @@
 
 /* This function returns length*cos(angle). */
 
-float foo (int length, int angle, int* cos)
+float foo (int length, int angle, int* coss)
 {
-  return length * cos[angle];
+  return length * coss[angle];
 }
 
 /* Main program. */
@@ -70,7 +70,7 @@ int main ()
  
   int size = 360/30;/*numero de index que teria do valor 0 indo a 330, de 30 em 30*/
   int angle[size];
-  int cos[331];/*Os unicos valores que variam para o calculo do cosseno eh o angulo, 
+  int coss[331];/*Os unicos valores que variam para o calculo do cosseno eh o angulo, 
 		 assim podemos usar o angulo como index para identificar o valor do calculo do cosseno*/
  
   /* Outer loop, to compute averages. */
@@ -85,7 +85,7 @@ int main ()
   }
 
   for (i = 0; i < 360; i+=30){
-  	cos[i] = cos(angle[i%30]*PI/180) 
+  	coss[i] = coss(angle[i%30]*PI/180) 
 	/* (angle[0 % 30]=0) => cos[0] = cos(0*PI/180)
 	 * (angle[30 % 30]=30) => cos[30] = cos(30*PI/180)
 	 * (angle[60 % 30]=60) => cos[60] = cos(60*PI/180)
@@ -105,7 +105,7 @@ int main ()
       for (j=0; j<MAX_INNER_LOOP; j++)
 	{
 	  angle = angle[j % size];	/* 0, 30, 60, 90 ... 330, 0, 30 ... */
-	  val = foo (LENGTH, angle, cos);
+	  val = foo (LENGTH, angle, coss);
 	  
 	  #if DEBUG
 	  fprintf (stdout, "(%lu) %3d %8.3f %u\n",
