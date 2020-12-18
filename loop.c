@@ -34,9 +34,15 @@
 #define PI 3.1416
 #define LENGTH 100
 
+//Variaveis globais para otimizar o acesso as variaveis
+int size = 360/30;/*numero de index que teria do valor 0 indo a 330, de 30 em 30*/
+float coss[331];/*Os unicos valores que variam para o calculo do cosseno eh o angulo, 
+		 assim podemos usar o angulo como index para identificar o valor do calculo do cosseno*/
+ 
+
 /* This function returns length*cos(angle). */
 
-float foo (int length, int angle, int* coss)
+float foo (int length, int angle)
 {
   return length * coss[angle];
 }
@@ -65,18 +71,17 @@ int main ()
    * Como angle esta entre 0 a 330, ele eh o unico valor que varia no cosseno e o 
    * Calculo de cosseno depende diretamente dele, fazer uma indexacao
    * Para registrar os resultados de cos(angle*PI/180) eh uma otima opcao, pois gastaria menos
-   * Tempo de calculo e obteria o valor em tempo constante*/
+   * Tempo de calculo e obteria o valor em tempo constante
+   *
+   * Alem disso, array coss foi repassado globalmente, otimizando o acesso a variavel*/
 
+
+  int angle_arr[size];
  
-  int size = 360/30;/*numero de index que teria do valor 0 indo a 330, de 30 em 30*/
-  int angle[size];
-  int coss[331];/*Os unicos valores que variam para o calculo do cosseno eh o angulo, 
-		 assim podemos usar o angulo como index para identificar o valor do calculo do cosseno*/
- 
-  /* Outer loop, to compute averages. */
+    /* Outer loop, to compute averages. */
 
   for (i = 0; i < size; i++){
-  	angle[i] = i*30; 
+  	angle_arr[i] = i*30; 
 	/* angle[0]=0 ,
 	 * angle[1]=30,
 	 * angle[2]=60,
@@ -85,7 +90,7 @@ int main ()
   }
 
   for (i = 0; i < 360; i+=30){
-  	coss[i] = coss(angle[i%30]*PI/180) 
+  	coss[i] = cos(angle_arr[i%30]*PI/180); 
 	/* (angle[0 % 30]=0) => cos[0] = cos(0*PI/180)
 	 * (angle[30 % 30]=30) => cos[30] = cos(30*PI/180)
 	 * (angle[60 % 30]=60) => cos[60] = cos(60*PI/180)
@@ -104,8 +109,8 @@ int main ()
       
       for (j=0; j<MAX_INNER_LOOP; j++)
 	{
-	  angle = angle[j % size];	/* 0, 30, 60, 90 ... 330, 0, 30 ... */
-	  val = foo (LENGTH, angle, coss);
+	  angle = angle_arr[j % size];	/* 0, 30, 60, 90 ... 330, 0, 30 ... */
+	  val = foo (LENGTH, angle);
 	  
 	  #if DEBUG
 	  fprintf (stdout, "(%lu) %3d %8.3f %u\n",
